@@ -1,24 +1,47 @@
-# Minimum Total Cost for Equal Elements in a Window
+# Megoldás Magyarázata – Liftoptimalizálási Feladat
 
-## **Feladat leírása**  
-Adott egy `n` egész számot tartalmazó tömb, és egy `k` méretű csúszóablak.  
-A feladat az, hogy **balról jobbra** haladva minden `k` elemű ablakra számoljuk ki a minimális teljes költséget, amely szükséges az ablak összes elemének egyenlővé tételéhez.  
+## **Alapötlet**  
+A feladat célja, hogy minimalizáljuk a liftutak számát, miközben minden személyt felviszünk úgy, hogy a lift súlykorlátját ne lépjük túl.
 
-### **Költségszámítás**  
-Egy elem növelésének vagy csökkentésének költsége **x**, ahol **x** az új és az eredeti érték különbsége.  
-A teljes költség az ilyen költségek összege.  
+Mivel `n` maximum értéke **20**, a **bitmasking** technikát és dinamikus programozást használjuk a probléma megoldására.
 
 ---
 
-## **Bemenet**  
-- Az első sor két egész számot tartalmaz: `n` (a tömb elemeinek száma) és `k` (az ablak mérete).  
-- A második sor `n` db egész számot tartalmaz: a tömb elemeit (x₁, x₂, ..., xₙ).  
+## **Megközelítés**  
 
-**Korlátok**:  
-1 ≤ k ≤ n ≤ 2⋅10⁵  
-1 ≤ xᵢ ≤ 10⁹  
+1. **Bitmask Állapotok**  
+   A problémát bitmasking segítségével oldjuk meg, ahol az egyes állapotokat a személyek jelenléte határozza meg:  
+   - Minden bit (`1` vagy `0`) azt jelzi, hogy egy adott személyt már felvettünk-e a liftbe.  
+   - Összes állapot: \( 2^n \).  
+
+2. **Dinamikus Programozás (DP)**  
+   A DP tömb minden állapota tartalmazza:  
+   - **Jelenlegi utak száma**,  
+   - **Az aktuális lift súlya**.  
+
+   Ha egy új személyt hozzáadunk, két esetet vizsgálunk:  
+   - **Ugyanazon úton maradunk**, ha a személy súlya belefér a lift aktuális teherbírásába.  
+   - **Új utat kezdünk**, ha a súlykorlátot túllépnénk.
 
 ---
 
-## **Kimenet**  
-- Ki kell írni **n-k+1** számot: a költségeket minden egyes `k` méretű csúszóablakra. 
+## **Implementáció**  
+
+### **Állapot Definíció**  
+- `dp[mask]`: Az állapot, ahol a `mask` jelöli, hogy kiket vittünk fel a liftben.  
+- Minden állapotot a `(current_rides, current_weight)` pár reprezentál.
+
+### **Frissítés**  
+1. **Iterálunk az összes állapoton** (bitmask kombinációk).  
+2. Minden állapothoz kipróbáljuk, hogy egy új személyt fel tudunk-e venni.  
+3. Frissítjük a következő állapotot:  
+   - Ha a személy belefér a súlykorlátba, maradunk az úton.  
+   - Ha nem, új utat kezdünk.  
+
+---
+
+## **Idő- és Térbeli Komplexitás**  
+- **Időkomplexitás:** \( O(2^n \cdot n) \), mivel minden állapotot legfeljebb \( n \)-szer vizsgálunk.  
+- **Térbeli Komplexitás:** \( O(2^n) \), mivel ennyi állapotunk lehet.
+
+---

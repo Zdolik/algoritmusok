@@ -1,24 +1,25 @@
-# Minimum Total Cost for Equal Elements in a Window
+#!/bin/bash
 
-## **Feladat leírása**  
-Adott egy `n` egész számot tartalmazó tömb, és egy `k` méretű csúszóablak.  
-A feladat az, hogy **balról jobbra** haladva minden `k` elemű ablakra számoljuk ki a minimális teljes költséget, amely szükséges az ablak összes elemének egyenlővé tételéhez.  
+TEST_CASES=("4 10
+4 8 6 1" "5 15
+2 3 7 8 4" "3 5
+2 2 2" "1 100
+99")
 
-### **Költségszámítás**  
-Egy elem növelésének vagy csökkentésének költsége **x**, ahol **x** az új és az eredeti érték különbsége.  
-A teljes költség az ilyen költségek összege.  
+EXPECTED_OUTPUTS=("2" "3" "2" "1")
 
----
+echo "=== LIFTOPTIMALIZÁCIÓS TESZT ==="
+for i in "${!TEST_CASES[@]}"; do
+    echo "Teszt #$((i+1)):"
+    echo "${TEST_CASES[$i]}" | python3 feladat3.py > output.txt
+    OUTPUT=$(cat output.txt)
 
-## **Bemenet**  
-- Az első sor két egész számot tartalmaz: `n` (a tömb elemeinek száma) és `k` (az ablak mérete).  
-- A második sor `n` db egész számot tartalmaz: a tömb elemeit (x₁, x₂, ..., xₙ).  
-
-**Korlátok**:  
-1 ≤ k ≤ n ≤ 2⋅10⁵  
-1 ≤ xᵢ ≤ 10⁹  
-
----
-
-## **Kimenet**  
-- Ki kell írni **n-k+1** számot: a költségeket minden egyes `k` méretű csúszóablakra. 
+    if [ "$OUTPUT" == "${EXPECTED_OUTPUTS[$i]}" ]; then
+        echo "Sikeres teszt!"
+    else
+        echo "Sikertelen teszt!"
+        echo "Elvárt: ${EXPECTED_OUTPUTS[$i]}"
+        echo "Kapott: $OUTPUT"
+    fi
+    echo "-----------------------"
+done

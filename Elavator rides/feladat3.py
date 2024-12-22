@@ -1,24 +1,26 @@
-# Minimum Total Cost for Equal Elements in a Window
+def min_elevator_rides(n, x, weights):
 
-## **Feladat leírása**  
-Adott egy `n` egész számot tartalmazó tömb, és egy `k` méretű csúszóablak.  
-A feladat az, hogy **balról jobbra** haladva minden `k` elemű ablakra számoljuk ki a minimális teljes költséget, amely szükséges az ablak összes elemének egyenlővé tételéhez.  
+    dp = [(n + 1, 0)] * (1 << n)
+    dp[0] = (1, 0) 
 
-### **Költségszámítás**  
-Egy elem növelésének vagy csökkentésének költsége **x**, ahol **x** az új és az eredeti érték különbsége.  
-A teljes költség az ilyen költségek összege.  
+    for mask in range(1 << n): 
+        for i in range(n):  #
+            if not (mask & (1 << i)):  
+                prev_mask = mask | (1 << i)
+                current_rides, current_weight = dp[mask]
+                person_weight = weights[i]
+                
+                if current_weight + person_weight <= x:
+                   
+                    dp[prev_mask] = min(dp[prev_mask], (current_rides, current_weight + person_weight))
+                else:
+                 
+                    dp[prev_mask] = min(dp[prev_mask], (current_rides + 1, person_weight))
 
----
+  
+    return dp[(1 << n) - 1][0]
 
-## **Bemenet**  
-- Az első sor két egész számot tartalmaz: `n` (a tömb elemeinek száma) és `k` (az ablak mérete).  
-- A második sor `n` db egész számot tartalmaz: a tömb elemeit (x₁, x₂, ..., xₙ).  
-
-**Korlátok**:  
-1 ≤ k ≤ n ≤ 2⋅10⁵  
-1 ≤ xᵢ ≤ 10⁹  
-
----
-
-## **Kimenet**  
-- Ki kell írni **n-k+1** számot: a költségeket minden egyes `k` méretű csúszóablakra. 
+if __name__ == "__main__":
+    n, x = map(int, input().split())
+    weights = list(map(int, input().split()))
+    print(min_elevator_rides(n, x, weights))
